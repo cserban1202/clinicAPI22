@@ -18,5 +18,7 @@ namespace clinicAPI
         }
         
         public DbSet<Category1> Categories { get; set; }
+        public DbSet<Category2> Categories2 { get; set; }
+        public DbSet<Category3> Categories3 { get; set; }
     }
 }

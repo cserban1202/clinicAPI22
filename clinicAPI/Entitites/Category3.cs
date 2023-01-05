@@ -5,17 +5,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace clinicAPI.Entitites
 {
-    public class Category1
+    public class Category3
+
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "the field with the name {0} is required")]
-        [StringLength(150)]
-        [FirstLetterUpperCase]
-        public string Name { get; set; }
-        
-
-     
+        public string Category { get; set; }
+        public string Type { get; set; }
+        public int Price { get; set; }
     }
+
 }

@@ -13,10 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using clinicAPI;
 using Microsoft.EntityFrameworkCore;
 using clinicAPI.Helpers;
+using clinicAPI.Filters;
+using clinicAPI.APIBehavior;
 
 namespace MoviesAPI
 {
@@ -35,26 +36,37 @@ namespace MoviesAPI
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddCors(options =>
+            {
+                
+                options.AddDefaultPolicy(builder =>
+                {
+                    var frontendURL = Configuration.GetValue<string>("frontend_url");
+                    builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader()
+                           .WithExposedHeaders(new string[] { "totalAmountOfRecords" });
+                });
+            });
+
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<IFileStorageService, AzureStorageService>();
+
+            //local storage of the photo <- UNCOMMENT FOR LOCAL STORAGE IN WWWROOT OF THE PHOTO ->
+            //services.AddScoped<IFileStorageService, InAppStorageService>();
+            //services.AddHttpContextAccessor();
             services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(MyExceptionFilter));
-            });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+                options.Filters.Add(typeof(ParseBadRequest));
+            }).ConfigureApiBehaviorOptions(BadRequestBehavior.Parse);
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MoviesAPI", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "clinicAPI", Version = "v1" });
             });
 
-            services.AddCors(options =>
-            {
-                var frontendURL = Configuration.GetValue<string>("frontend_url");
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
-                });
-            });
-            services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +88,9 @@ namespace MoviesAPI
             }
 
             app.UseHttpsRedirection();
+
+            //local storage of the photo <- UNCOMMENT FOR LOCAL STORAGE IN WWWROOT OF THE PHOTO ->
+            //app.UseStaticFiles();
 
             app.UseRouting();
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using clinicAPI.DTOs;
 using AutoMapper;
+using clinicAPI.Helpers;
 
 namespace clinicAPI.Controllers
 {
@@ -32,41 +33,64 @@ namespace clinicAPI.Controllers
 
         
 
-        [HttpGet]
-        public async Task<ActionResult<List<Category1DTO>>> Get()
+        [HttpGet] // api/categories
+        public async Task<ActionResult<List<Category1DTO>>> Get([FromQuery] PaginationDTO paginationDTO)
         {
-            logger.LogInformation("getting all the categories");
-            var category1 = await context.Categories.ToListAsync();
-            return mapper.Map<List<Category1DTO>>(category1);   
+            var queryable = context.Categories.AsQueryable();
+            await HttpContext.InsertParameterPaginationInHeader(queryable);
+            var category = await queryable.OrderBy(x => x.Name).Paginate(paginationDTO).ToListAsync();
+            return mapper.Map<List<Category1DTO>>(category);   
+        }
+
+        [HttpGet("{Id:int}")]   //api/genres/example
+        public async Task<ActionResult<Category1DTO>> Get(int Id)
+        {
+            var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == Id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return mapper.Map<Category1DTO>(category);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Category1CreationDTO category1CreationDTO)
+        public async Task<ActionResult> Post([FromForm] Category1CreationDTO category1CreationDTO)
         {
-            var category1 = mapper.Map<Category1DTO>(category1CreationDTO);
-            context.Add(category1);
+           
+            return NoContent();
+            throw new NotImplementedException();
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, [FromBody] Category1CreationDTO category1CreationDTO)
+        {
+
+            var category1 = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+
+            if(category1 == null)
+            {
+                return NotFound(); 
+            }
+            category1 = mapper.Map(category1CreationDTO, category1);     
+            await context.SaveChangesAsync();              
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var exists = await context.Categories.AnyAsync(x => x.Id == id);
+
+            if (!exists)
+            {
+                return NotFound();
+            }
+
+            context.Remove(new Category1() { Id = id });
             await context.SaveChangesAsync();
             return NoContent();
         }
 
-        [HttpPut]
-        public ActionResult Put([FromBody] Category1 category1)
-        {
 
-            throw new NotImplementedException();
-        }
-
-        [HttpDelete]
-        public ActionResult Delete()
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet("{Id:int}\n", Name = "getGenre")]   //api/genres/example
-        public ActionResult<Category1> Get(int Id)
-        {
-
-            throw new NotImplementedException();
-        }
     }
 }
