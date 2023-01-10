@@ -17,8 +17,15 @@ namespace clinicAPI
 
         }
         
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder); 
+        }
+        
         public DbSet<Category1> Categories { get; set; }
         public DbSet<Category2> Categories2 { get; set; }
         public DbSet<Category3> Categories3 { get; set; }
+
+        public DbSet<Category4> Categories4 { get; set; }
     }
 }

@@ -14,6 +14,12 @@ namespace clinicAPI.Helpers
             CreateMap<Category2DTO, Category2>().ReverseMap();
             CreateMap<Category2CreationDTO, Category2>()
                 .ForMember(x => x.Picture, options => options.Ignore());
+
+            CreateMap<Category3DTO, Category3>().ReverseMap();
+
+            CreateMap<Category4DTO, Category4>().ReverseMap();
+            CreateMap<Category4CreationDTO, Category4>();
+
         }
     }
 }
