@@ -10,11 +10,15 @@ using Microsoft.EntityFrameworkCore;
 using clinicAPI.DTOs;
 using AutoMapper;
 using clinicAPI.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace clinicAPI.Controllers
 {
     [Route("api/category1")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsClient")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CategoryController: ControllerBase
     {
         
@@ -42,6 +46,7 @@ namespace clinicAPI.Controllers
             return mapper.Map<List<Category1DTO>>(category);   
         }
 
+
         [HttpGet("{Id:int}")]   //api/genres/example
         public async Task<ActionResult<Category1DTO>> Get(int Id)
         {
@@ -53,12 +58,14 @@ namespace clinicAPI.Controllers
             return mapper.Map<Category1DTO>(category);
         }
 
+
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] Category1CreationDTO category1CreationDTO)
+        public async Task<ActionResult> Post([FromBody] Category1CreationDTO category1CreationDTO)
         {
-           
+            var category = mapper.Map<Category1>(category1CreationDTO);
+            context.Add(category);
+            await context.SaveChangesAsync();
             return NoContent();
-            throw new NotImplementedException();
         }
 
         [HttpPut("{id:int}")]

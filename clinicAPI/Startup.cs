@@ -18,6 +18,12 @@ using Microsoft.EntityFrameworkCore;
 using clinicAPI.Helpers;
 using clinicAPI.Filters;
 using clinicAPI.APIBehavior;
+using Microsoft.AspNet.Identity.CoreCompat;
+using Microsoft.AspNetCore.Identity;
+using IdentityUser = Microsoft.AspNetCore.Identity.IdentityUser;
+using IdentityRole = Microsoft.AspNetCore.Identity.IdentityRole;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MoviesAPI
 {
@@ -58,14 +64,36 @@ namespace MoviesAPI
                 options.Filters.Add(typeof(MyExceptionFilter));
                 options.Filters.Add(typeof(ParseBadRequest));
             }).ConfigureApiBehaviorOptions(BadRequestBehavior.Parse);
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsClient", policy => policy.RequireClaim("role", "client"));
+            }); 
+
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "clinicAPI", Version = "v1" });
             });
 
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["keyjwt"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
         }
 
@@ -102,6 +130,8 @@ namespace MoviesAPI
             {
                 endpoints.MapControllers();
             });
+
+           
         }
     }
 }

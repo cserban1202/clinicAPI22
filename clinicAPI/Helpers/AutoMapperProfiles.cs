@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using clinicAPI.DTOs;
 using clinicAPI.Entitites;
+using Microsoft.AspNet.Identity.CoreCompat;
 
 namespace clinicAPI.Helpers
 {
@@ -17,8 +18,15 @@ namespace clinicAPI.Helpers
 
             CreateMap<Category3DTO, Category3>().ReverseMap();
 
+            CreateMap<DoctorsDTO, Doctors>().ReverseMap();
+
             CreateMap<Category4DTO, Category4>().ReverseMap();
             CreateMap<Category4CreationDTO, Category4>();
+
+            CreateMap<IdentityUser, UserDTO>();
+
+            CreateMap<ConsultationDTO, Consultation>().ReverseMap();
+            CreateMap<ConsultationCreationDTO, Consultation>();
 
         }
     }

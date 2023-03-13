@@ -10,7 +10,7 @@ namespace clinicAPI.Entitites
     public class Category1
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "the field with the name {0} is required")]
+        //[Required(ErrorMessage = "the field with the name {0} is required")]
         [StringLength(150)]
         [FirstLetterUpperCase]
         public string Name { get; set; }

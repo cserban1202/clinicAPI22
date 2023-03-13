@@ -2,6 +2,8 @@
 using clinicAPI.DTOs;
 using clinicAPI.Entitites;
 using clinicAPI.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,8 @@ namespace clinicAPI.Controllers
 {
     [Route("api/cards")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsClient")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class Category4Controller: ControllerBase
     {
         private readonly ApplicationDbContext context;

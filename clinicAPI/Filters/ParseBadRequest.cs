@@ -18,7 +18,11 @@ namespace clinicAPI.Filters
             {
                 var response = new List<string>();
                 var badRequestObjectResult = context.Result as BadRequestObjectResult;
-                if(badRequestObjectResult is string)
+                if (badRequestObjectResult.Value is string)
+                {
+                    response.Add(badRequestObjectResult.Value.ToString());
+                }
+                if (badRequestObjectResult is string)
                 {
                     response.Add(badRequestObjectResult.Value.ToString());
                 }

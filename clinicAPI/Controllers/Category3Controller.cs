@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using clinicAPI.DTOs;
 using clinicAPI.Entitites;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,8 @@ namespace clinicAPI.Controllers
 
     [Route("api/category3")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsClient")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class Category3Controller: ControllerBase
     {
         private readonly ILogger<Category3Controller> logger;
