@@ -31,5 +31,7 @@ namespace clinicAPI
 
         public DbSet<Doctors> Doctors { get; set; }
         public DbSet<Consultation>Consultations { get; set; }
+
+        public DbSet<Examination> Examinations { get; set; }
     }
 }

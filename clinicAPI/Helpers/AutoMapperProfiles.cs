@@ -28,6 +28,9 @@ namespace clinicAPI.Helpers
             CreateMap<ConsultationDTO, Consultation>().ReverseMap();
             CreateMap<ConsultationCreationDTO, Consultation>();
 
+            CreateMap<ExaminationDTO, Examination>().ReverseMap();
+            CreateMap<ExaminationCreationDTO, Examination>();
+
         }
     }
 }

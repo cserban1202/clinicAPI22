@@ -28,13 +28,5 @@ namespace clinicAPI.Controllers
             return NoContent();
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> Post([FromBody] Category1CreationDTO category1CreationDTO)
-        //{
-        //    var category = mapper.Map<Category1>(category1CreationDTO);
-        //    context.Add(category);
-        //    await context.SaveChangesAsync();
-        //    return NoContent();
-        //}
     }
 }
