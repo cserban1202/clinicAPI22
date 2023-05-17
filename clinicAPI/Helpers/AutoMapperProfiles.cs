@@ -17,6 +17,7 @@ namespace clinicAPI.Helpers
                 .ForMember(x => x.Picture, options => options.Ignore());
 
             CreateMap<Category3DTO, Category3>().ReverseMap();
+            CreateMap<Category3CreationDTO, Category3>();
 
             CreateMap<DoctorsDTO, Doctors>().ReverseMap();
 
