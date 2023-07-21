@@ -20,6 +20,7 @@ namespace clinicAPI.Helpers
             CreateMap<Category3CreationDTO, Category3>();
 
             CreateMap<DoctorsDTO, Doctors>().ReverseMap();
+            CreateMap<DoctorsCreationDTO, Doctors>();
 
             CreateMap<Category4DTO, Category4>().ReverseMap();
             CreateMap<Category4CreationDTO, Category4>();

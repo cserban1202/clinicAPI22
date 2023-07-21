@@ -27,5 +27,19 @@ namespace clinicAPI.Controllers
             var doctor = await context.Doctors.ToListAsync();
             return mapper.Map<List<DoctorsDTO>>(doctor);
         }
+
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, [FromForm] DoctorsCreationDTO doctorsCreationDTO)
+        {
+            var doctors = await context.Doctors.FirstOrDefaultAsync(x => x.Id == id);
+            if (doctors == null)
+            {
+                return NotFound();
+            }
+            doctors = mapper.Map(doctorsCreationDTO, doctors);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
